@@ -177,6 +177,33 @@ public class ALRadialMenu: UIButton {
     }
     
     /**
+     Present the buttons inside a specific view, without an overlay view
+     
+     - parameter UIView: view
+     */
+    @discardableResult
+    public func presentInSpecificView(view: UIView) -> Self {
+        if buttons.count == 0 {
+            print("ALRadialMenu has no buttons to present")
+            return self
+        }
+        
+        if animationOrigin == nil {
+            animationOrigin = center
+        }
+        
+        for i in 0..<buttons.count {
+            
+            let button = buttons[i]
+            
+            view.addSubview(button)
+            presentAnimation(view: button, index: i)
+        }
+        
+        return self
+    }
+    
+    /**
     Present the buttons in the specified window
     
     - parameter UIWindow: window
