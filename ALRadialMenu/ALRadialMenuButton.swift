@@ -10,7 +10,7 @@ import UIKit
 
 public typealias ALRadialMenuButtonAction = (UIButton) -> Void
 
-public class ALRadialMenuButton: UIButton {
+open class ALRadialMenuButton: UIButton {
     public var action: ALRadialMenuButtonAction? {
         didSet {
             configureAction()
