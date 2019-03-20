@@ -66,7 +66,9 @@ public class ALRadialMenu: UIButton {
             
             button.center = center
             button.action = { button in
-                self._dismiss(selectedIndex: i)
+                if self.dismissOnButtonTap {
+                    self._dismiss(selectedIndex: i)
+                }
                 if let a = action {
                     a(button)
                 }
@@ -77,15 +79,28 @@ public class ALRadialMenu: UIButton {
     }
     
     /**
-    Set to false to disable dismissing the menu on background tap
-    
-    Default = true
-    
-    - parameter Bool: enabled or disable the gesture
-    */
+     Set to false to disable dismissing the menu on background tap
+     
+     Default = true
+     
+     - parameter Bool: enabled or disable the gesture
+     */
     @discardableResult
     public func setDismissOnOverlayTap(dismissOnOverlayTap: Bool) -> Self {
         self.dismissOnOverlayTap = dismissOnOverlayTap
+        return self
+    }
+    
+    /**
+     Set to false to disable dismissing the menu on button tap
+     
+     Default = true
+     
+     - parameter Bool: enabled or disable the gesture
+     */
+    @discardableResult
+    public func setDismissOnButtonTap(dismissOnButtonTap: Bool) -> Self {
+        self.dismissOnButtonTap = dismissOnButtonTap
         return self
     }
     
@@ -262,6 +277,8 @@ public class ALRadialMenu: UIButton {
             }
         }
     }
+    
+    private var dismissOnButtonTap = true
     
     private var onDismiss: ALAnimationsClosure?
     
