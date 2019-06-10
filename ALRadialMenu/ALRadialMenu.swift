@@ -21,7 +21,7 @@ private struct Angle {
 public class ALRadialMenu: UIButton {
     
     private var animatingStatuses: [UIView: Bool] = [:]
-    var animating: Bool {
+    public var animating: Bool {
         return animatingStatuses.values.contains(true)
     }
     
