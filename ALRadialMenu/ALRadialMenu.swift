@@ -20,6 +20,11 @@ private struct Angle {
 
 public class ALRadialMenu: UIButton {
     
+    private var animatingStatuses: [UIView: Bool] = [:]
+    var animating: Bool {
+        return animatingStatuses.values.contains(true)
+    }
+    
     // MARK: Public API
     
     public convenience init() {
@@ -60,6 +65,7 @@ public class ALRadialMenu: UIButton {
     public func setButtons(buttons: [ALRadialMenuButton]) -> Self {
         self.buttons = buttons
         
+        animatingStatuses.removeAll()
         for i in 0..<buttons.count {
             let button = buttons[i]
             let action = button.action
@@ -73,6 +79,8 @@ public class ALRadialMenu: UIButton {
                     a(button)
                 }
             }
+            
+            animatingStatuses[button] = false
         }
         
         return self
@@ -207,6 +215,9 @@ public class ALRadialMenu: UIButton {
             animationOrigin = center
         }
         
+        animatingStatuses.forEach { key, value in
+            animatingStatuses[key] = true
+        }
         for i in 0..<buttons.count {
             
             let button = buttons[i]
@@ -237,6 +248,9 @@ public class ALRadialMenu: UIButton {
         
         win.addSubview(overlayView)
         
+        animatingStatuses.forEach { key, value in
+            animatingStatuses[key] = true
+        }
         for i in 0..<buttons.count {
             
             let button = buttons[i]
@@ -311,7 +325,10 @@ public class ALRadialMenu: UIButton {
         overlayView.removeFromSuperview()
         self.onDismiss?()
         
-        for i in 0..<buttons.count {
+        animatingStatuses.forEach { key, value in
+            animatingStatuses[key] = true
+        }
+        for i in (0..<buttons.count).reversed() {
             if i == selectedIndex {
                 selectedAnimation(view: buttons[i])
             } else {
@@ -330,7 +347,9 @@ public class ALRadialMenu: UIButton {
         UIView.animate(withDuration: 0.5, delay: _delay, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: animationOptions, animations: {
             view.alpha = 1
             view.center = newCenter
-        }, completion: nil)
+        }, completion: { finished in
+            self.animatingStatuses[view] = false
+        })
     }
     
     private func dismissAnimation(view: ALRadialMenuButton, index: Int) {
@@ -340,6 +359,8 @@ public class ALRadialMenu: UIButton {
             view.center = self.animationOrigin
         }, completion: { finished in
             view.removeFromSuperview()
+            
+            self.animatingStatuses[view] = false
         })
     }
     
@@ -350,6 +371,8 @@ public class ALRadialMenu: UIButton {
         }, completion: { finished in
             view.transform = CGAffineTransform.identity
             view.removeFromSuperview()
+            
+            self.animatingStatuses[view] = false
         })
     }
     
